@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Your Style Report | FashionVision AI{% endblock %}
+{% block content %}
+<div class="result-top"><div><div class="eyebrow">YOUR PERSONAL STYLE REPORT</div><h1>Here's your <i>style insight.</i></h1></div><a class="back-link" href="{{ url_for('index') }}">← Analyse another</a></div>
+<section class="result-grid">
+  <div class="photo-card"><img src="{{ image_url }}" alt="Uploaded clothing item"><div class="photo-caption">YOUR UPLOADED ITEM</div></div>
+  <div class="summary-card">
+    <div class="eyebrow">01 / IDENTIFICATION</div><div class="category">{{ category }}</div>
+    {% if model_available %}<div class="confidence">Model confidence · {{ confidence }}%</div>{% else %}<div class="confidence">Manual category selection · classifier not connected</div>{% endif %}
+    <p>{{ description }}</p>
+    <div class="eyebrow sub-eyebrow">DETECTED COLOUR PALETTE</div>
+    <div class="swatches">{% for c in attrs.palette %}<div class="swatch"><span style="background:rgb({{ c.rgb[0] }},{{ c.rgb[1] }},{{ c.rgb[2] }})"></span><small>{{ c.name }}<br>{{ c.percentage }}%</small></div>{% endfor %}</div>
+    <div class="texture"><span>Visual texture indicator</span><b>{{ attrs.texture }}</b></div>
+  </div>
+</section>
+<section class="panel recommendations">
+  <div class="panel-heading"><div><div class="eyebrow">02 / AI-ASSISTED STYLING</div><h2>Make it your look</h2></div><div class="step">PERSONALIZED IDEAS</div></div>
+  <div class="context-tags"><span>{{ occasion }}</span><span>{{ season }}</span><span>{{ style }}</span></div>
+  <div class="recommend-grid">
+    <article><div class="rec-icon">✦</div><h3>Outfit combinations</h3><ul>{% for x in recommendations.outfit_ideas %}<li>{{ x }}</li>{% endfor %}</ul></article>
+    <article><div class="rec-icon">◈</div><h3>Matching colours</h3><div class="colour-tags">{% for x in recommendations.matching_colours %}<span>{{ x }}</span>{% endfor %}</div><p>Try these colours with your detected {{ attrs.dominant_colour|lower }} item.</p></article>
+    <article><div class="rec-icon">◎</div><h3>Occasion & season</h3><p>{{ recommendations.occasion_tip }}</p><p>{{ recommendations.season_tip }}</p></article>
+    <article><div class="rec-icon">✧</div><h3>Your styling direction</h3><p>{{ recommendations.style_tip }}</p><p>{{ recommendations.personalization }}</p></article>
+  </div>
+  <div class="disclaimer">Recommendations are AI-assisted styling suggestions based on visual estimates and general fashion rules. Use your own judgement for fit, comfort and weather.</div>
+  <a class="primary inline-button" href="{{ url_for('index') }}">Try another image <span>→</span></a>
+</section>
+{% endblock %}

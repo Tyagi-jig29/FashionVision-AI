@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}FashionVision AI | Discover Your Style{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="eyebrow">AI-POWERED FASHION ASSISTANT</div>
+  <h1>Style starts with<br><i>a single image.</i></h1>
+  <p class="hero-copy">Upload any clothing item. Discover its colours, explore styling ideas and get recommendations shaped around your occasion and personal taste.</p>
+  <div class="feature-pills"><span>✦ Image analysis</span><span>✦ Colour insights</span><span>✦ Personal styling</span></div>
+</section>
+<section class="panel">
+  <div class="panel-heading"><div><div class="eyebrow">01 / YOUR OUTFIT</div><h2>Upload a fashion item</h2></div><div class="step">IMAGE INPUT</div></div>
+  <form method="post" enctype="multipart/form-data">
+    <label class="upload-zone" for="photo">
+      <div class="upload-icon">↑</div><strong>Choose an image to analyse</strong><span>JPG, PNG or WEBP · Max 8 MB</span>
+      <input type="file" id="photo" name="photo" accept=".jpg,.jpeg,.png,.webp" required>
+      <div id="file-name" class="file-name">No image selected</div>
+    </label>
+    <div class="form-grid">
+      <div class="field"><label>Occasion</label><select name="occasion"><option>Casual</option><option>College / Everyday</option><option>Office / Formal</option><option>Party / Evening</option><option>Festive</option></select></div>
+      <div class="field"><label>Season</label><select name="season"><option>All-season</option><option>Summer</option><option>Winter</option><option>Rainy</option></select></div>
+      <div class="field"><label>Preferred look</label><select name="style"><option>Casual</option><option>Streetwear</option><option>Minimal</option><option>Formal</option><option>Smart casual</option><option>Traditional</option></select></div>
+      <div class="field"><label>Category (only if model unavailable)</label><select name="manual_category"><option value="">Let AI model identify it</option>{% for c in categories %}<option>{{ c }}</option>{% endfor %}</select></div>
+    </div>
+    <div class="field"><label>Your style preferences <small>(optional)</small></label><input name="preferences" maxlength="300" placeholder="e.g. I like neutral colours, comfortable outfits and sneakers"></div>
+    {% if not model_available %}<div class="notice"><b>Classifier model not connected yet.</b> {{ model_error }} Colour analysis and styling recommendations will still work. Select a category above to get category-specific suggestions.</div>{% else %}<div class="notice success">Trained fashion classifier detected and ready.</div>{% endif %}
+    <button class="primary" type="submit">Analyse my fashion item <span>→</span></button>
+  </form>
+</section>
+<section class="how"><div class="eyebrow">HOW IT WORKS</div><div class="how-grid"><div><b>01</b><h3>Upload</h3><p>Add a photo of your clothing item.</p></div><div><b>02</b><h3>Analyse</h3><p>AI identifies the item and visual attributes.</p></div><div><b>03</b><h3>Style</h3><p>Get outfit, colour and occasion suggestions.</p></div></div></section>
+<script>
+document.getElementById('photo').addEventListener('change', function(){
+  document.getElementById('file-name').textContent = this.files.length ? this.files[0].name : 'No image selected';
+});
+</script>
+{% endblock %}
